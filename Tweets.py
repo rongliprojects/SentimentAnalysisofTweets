@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-#git clone https://github.com/amueller/word_cloud.git
-#cd word_cloud
-#pip install .
+
+#!pip install wordcloud
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 
@@ -62,6 +61,7 @@ if len(choice) > 0:
     fig_choice = px.histogram(choice_data, x='airline', y='airline_sentiment', histfunc= 'count',color='airline_sentiment',facet_col='airline_sentiment', labels={'airline_sentiment': 'tweets'}, height=600, width=800)
     st.plotly_chart(fig_choice)
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
 st.sidebar.header("Word Cloud")
 word_sentiment = st.sidebar.radio('Display word cloud for what sentiment?', ('positive', 'neutral', 'negative'))
 if not st.sidebar.checkbox("Close", True, key='3'):
@@ -70,7 +70,6 @@ if not st.sidebar.checkbox("Close", True, key='3'):
     words = ' '.join(df['text'])
     processed_words = ' '.join([word for word in words.split() if 'http' not in word and not word.startswith('@') and word != 'RT'])
     wordcloud = WordCloud(stopwords=STOPWORDS, background_color='white', width=800, height=640).generate(processed_words)
-    plt.imshow(wordcloud)
-    plt.xticks([])
-    plt.yticks([])
+    plt.imshow(wordcloud,interpolation='bilinear')
+    plt.axis("off")
     st.pyplot()
